@@ -261,8 +261,7 @@ class Response(object):
             value = value.strip()
             lname = name.lower().strip()
             if lname == "content-length":
-                if self.req.method != 'HEAD':
-                    self.response_length = int(value)
+                self.response_length = int(value)
             elif util.is_hoppish(name):
                 if lname == "connection":
                     # handle websocket
@@ -325,6 +324,8 @@ class Response(object):
 
     def write(self, arg):
         self.send_headers()
+        if self.req.method == 'HEAD':
+            return
         if not isinstance(arg, bytes):
             raise TypeError('%r is not a byte' % arg)
         arglen = len(arg)

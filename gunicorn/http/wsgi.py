@@ -261,7 +261,8 @@ class Response(object):
             value = value.strip()
             lname = name.lower().strip()
             if lname == "content-length":
-                self.response_length = int(value)
+                if self.req.method != 'HEAD':
+                    self.response_length = int(value)
             elif util.is_hoppish(name):
                 if lname == "connection":
                     # handle websocket
